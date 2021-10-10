@@ -2,58 +2,84 @@
 """
 JOGO DOS 21FOSFOROS
 """
-def memor(jogada,memoria,b):
+import random
+def memor(jogada,contar,b):
     if jogada==1:
         if b==1:
-            if memoria%2==0:
-                print("Voce ganhou")
-                comecar()
-            else:
+            if contar%2==0:
                 print("Ganhou o computador")
                 comecar()
         else:
-            if memoria%2==0:
-                print("Ganhou o computador")
-                comecar()
-            else:
+            if contar%2==0:
                 print("Voce ganhou")
                 comecar()
-            
-def jogo(jogada,rodada,memoria,b):               
-    memoria=int(input("Qual a sua jogada?"))
-    if memoria>5 or memoria<1:#so permite jogadas ate 5
-        print("Escolha um numero entre 1 e 5")
-        jogo(jogada,rodada,memoria,b)
+            else:
+                print("Ganhou o computador")
+                comecar()
+                
+def verificar(memoria1,memoria2,ajuda):
+    if memoria1+memoria2<5:
+        tirar=5-memoria1-memoria2
+        ajuda=True
     else:
-        jogada=jogada-memoria
-        print(jogada)
-        rodada=rodada+1
-        memor(jogada,memoria,b)
-        print("vez do computador")
-        tirar=5-memoria
-        if tirar==0:
-            tirar=1
-        jogada=jogada-tirar
-        rodada=rodada+1
-        print(jogada)
-        memor(jogada,memoria,b)
-        jogo(jogada,rodada,memoria,b)
+        tirar=random.randint(1,4)
+        ajuda=False 
+    l=[ajuda,tirar]
+    return l
+        
+def jogo(memoria1,memoria2,jogada,ajuda,contar,b):
+    print("È a sua vez")
+    tirar=int(input("Qual a sua jogada?"))
+    if tirar>4 or tirar<1:
+        print("A sua jogada tem de ser entre 1 e 4")
+        jogo(memoria1,memoria2,jogada,ajuda,contar,b)
+    memoria1=tirar
+    jogada=jogada-tirar
+    print("Sobra",jogada)
+    contar=contar+1
+    memor(jogada,contar,b)
+    print("Vez do pc")
+    if ajuda==True:
+        tirar=5-memoria1       
+    else:
+        l=verificar(memoria1,memoria2,ajuda)
+        tirar=l[1]
+        ajuda=l[0]
+    jogada=jogada-tirar
+    print("Sobra",jogada)
+    contar=contar+1
+    memoria2=tirar
+    memor(jogada,contar,b)
+    jogo(memoria1,memoria2,jogada,ajuda,contar,b)
         
 def iniciojogo(b):
-    if b==2:#o computador é o 1
-        print("21")
+    if b==1:
+        print("È a sua vez")
+        tirar=int(input("Qual a sua jogada?"))
+        if tirar>4 or tirar<1:
+            print("A sua jogada tem de ser entre 1 e 4")
+            iniciojogo(b)
+        memoria1=tirar
+        jogada=21-tirar
+        print("Sobra",jogada)
+        print("Vez do pc")
+        tirar=5-memoria1
+        jogada=jogada-tirar
+        print("Sobra",jogada)
+        contar=2
+        memoria2=tirar
+        ajuda=True
+        jogo(memoria1,memoria2,jogada,ajuda,contar,b)
+    else:
         print("Vez do computador")
-        jogada=16
-        print(jogada)
-        rodada=2
-        memoria=5
-        jogo(jogada,rodada,memoria,b)
-    elif b==1:#o computador é 0 2
-        print("21")
-        rodada=1
-        memoria=0
-        jogada=21
-        jogo(jogada,rodada,memoria,b)
+        tirar=random.randint(1,4)
+        jogada=21-tirar
+        print("Sobra",jogada)
+        contar=1
+        memoria1=0
+        memoria2=tirar
+        ajuda=False
+        jogo(memoria1,memoria2,jogada,ajuda,contar,b)
         
 def comecar():
     a=input("Escreva play para iniciar o jogo:")
